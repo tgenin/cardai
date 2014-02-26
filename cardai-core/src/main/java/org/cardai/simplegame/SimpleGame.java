@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.cardai.simplegame.playingstrategy.PlayFirstCard;
+import org.cardai.simplegame.playingstrategy.PlayFirstImproved;
 import org.cardai.simplegame.playingstrategy.PlayHighestCard;
 import org.cardai.simplegame.playingstrategy.PlayRandomCard;
 
@@ -61,9 +62,10 @@ public class SimpleGame extends Game {
         this.strategies = new HashMap<String,Strategy>();
 
         // TODO Find a proper way to be more dynamic ? Dynamically load class files ?)
-        this.strategies.put(PlayRandomCard.getLabel()  , new PlayRandomCard());
-        this.strategies.put(PlayHighestCard.getLabel() , new PlayHighestCard());
-        this.strategies.put(PlayFirstCard.getLabel()   , new PlayFirstCard());
+        this.strategies.put(PlayRandomCard.getLabel()    , new PlayRandomCard());
+        this.strategies.put(PlayHighestCard.getLabel()   , new PlayHighestCard());
+        this.strategies.put(PlayFirstCard.getLabel()     , new PlayFirstCard());
+        this.strategies.put(PlayFirstImproved.getLabel() , new PlayFirstImproved());
     }
 
     @Override
@@ -95,7 +97,7 @@ public class SimpleGame extends Game {
      * @return winner card index
      * @throws InternalException cards contains no cards
      */
-    private int computeWinnerIndex(List<Card> cards) {
+    public int computeWinnerIndex(List<Card> cards) {
         assert(cards.size() > 0);
 
         int winIndex = 0;
@@ -178,11 +180,6 @@ public class SimpleGame extends Game {
             out += dformat + "% ";
             System.out.println(out);
         }
-    }
-
-    public List<Card> currentTrick() {
-        // TODO Auto-generated method stub
-        return null;
     }
 }
 

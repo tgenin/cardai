@@ -1,5 +1,5 @@
 /* Cardai - A card game engine
- * Copyright (C) 2014 Thomas GÃ©nin
+ * Copyright (C) 2014 Thomas Génin
  *
  * This file is part of Cardai.
  *
@@ -30,7 +30,7 @@ import org.cardai.game.Hand;
 public class PlayFirstImproved extends PlayingStrategy {
 
     /**
-     * PlayFistCard plays the first card of the hand.
+     * Improve play first strategy
      */
 
     public static String getLabel() {
@@ -42,19 +42,52 @@ public class PlayFirstImproved extends PlayingStrategy {
         if (playedCards.size() % GameLoader.game().getNumOfPlayers() == 0) // First to play
             return hand.getCards().get(0);
 
-        if (playedCards.size() % GameLoader.game().getNumOfPlayers() == GameLoader.game().getNumOfPlayers()-1) {
-            // Last player to play
-            System.out.println(playedCards);
-            System.out.println(hand.getCards());
-            selectNextBestOrSmallest(hand.getCards(), playedCards);
+        int numOfPlayers = GameLoader.game().getNumOfPlayers();
+
+        List<Card> trick = playedCards.subList(
+                               playedCards.size() - (playedCards.size() % numOfPlayers),
+                               playedCards.size()
+                           );
+
+        Card maxPlayedCard = Card.maxCard(trick);
+        Card myMaxCard     = Card.maxCard(hand.getCards());
+
+        // Do not have a better card => play min card
+        if (myMaxCard.getOrder() < maxPlayedCard.getOrder()) {
+            return Card.minCard(hand.getCards());
         }
 
+        // Ensure trick with smallest card
+        if (playedCards.size() % numOfPlayers == numOfPlayers - 1) {
+            return selectNextBest(
+                       hand.getCards(),
+                       playedCards.subList(playedCards.size() - (numOfPlayers - 1), playedCards.size())
+                   );
+        }
+
+        // Play first one (i.e. random)
         return hand.getCards().get(0);
     }
 
-    private void selectNextBestOrSmallest(List<Card> cards, List<Card> playedCards) {
+
+    private Card selectNextBest(List<Card> mycards, List<Card> playedCards) {
         SimpleGame g = (SimpleGame) GameLoader.game();
-        List<Card> trick = g.currentTrick();
+        int index = g.computeWinnerIndex(playedCards);
+        Card bestCard = playedCards.get(index);
+
+        Card maxCard = null;
+        for (Card c : mycards) {
+            if (c.getOrder() > bestCard.getOrder()) {
+                if (maxCard == null || c.getOrder() < maxCard.getOrder()) {
+                    maxCard = c;
+                }
+            }
+        }
+
+        if (maxCard == null)
+            return mycards.get(0); // Should never happen !
+
+        return maxCard;
     }
 
 
