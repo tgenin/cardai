@@ -19,6 +19,8 @@
 
 package org.cardai.game.card;
 
+import java.util.List;
+
 import org.cardai.exception.UnexpectedSituationException;
 
 public class Card {
@@ -82,4 +84,59 @@ public class Card {
     public int getOrder() {
         return getOrder(false);
     }
+
+    /**
+     * Compute the lowest card of a List of card
+     * @param cards
+     * @return
+     */
+    public static Card minCard(List<Card> cards) {
+        if (cards == null)
+            return null;
+
+        Card card = cards.get(0);
+        for (Card c : cards) {
+            if (c.getOrder() < card.getOrder()) {
+                card = c;
+            }
+        }
+
+        return card;
+    }
+
+    /**
+     * Compute the highest card of a List of card
+     * @param cards
+     * @return
+     */
+    public static Card maxCard(List<Card> cards) {
+        if (cards == null)
+            return null;
+
+        Card card = cards.get(0);
+        for (Card c : cards) {
+            if (c.getOrder() > card.getOrder()) {
+                card = c;
+            }
+        }
+
+        return card;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null)
+            return false;
+
+        if (o == this)
+            return true;
+
+        if (!(o instanceof Card))
+            return false;
+
+        Card c = (Card) o;
+        return this.getValue().equals(c.getValue()) && this.getSuit().equals(c.getSuit());
+    }
+
+
 }
