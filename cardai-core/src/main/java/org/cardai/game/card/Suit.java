@@ -33,17 +33,17 @@ public class Suit {
     public static final Map<String, String> colorPrettyDisplay;
     static {
         colorPrettyDisplay = new HashMap<String, String>();
-        colorPrettyDisplay.put("P", "♠"); // PIQUE
-        colorPrettyDisplay.put("S", "♠"); // SPADE
+        colorPrettyDisplay.put("P", "\u2660"); // PIQUE
+        colorPrettyDisplay.put("S", "\u2660"); // SPADE
 
-        colorPrettyDisplay.put("C", "♥"); // COEUR
-        colorPrettyDisplay.put("H", "♥"); // HEART
+        colorPrettyDisplay.put("C", "\u2665"); // COEUR
+        colorPrettyDisplay.put("H", "\u2665"); // HEART
 
-        colorPrettyDisplay.put("K", "♦"); // CARREAU
-        colorPrettyDisplay.put("D", "♦"); // DIAMOND
+        colorPrettyDisplay.put("K", "\u2666"); // CARREAU
+        colorPrettyDisplay.put("D", "\u2666"); // DIAMOND
 
-        colorPrettyDisplay.put("T", "♣"); // TREFLE
-        colorPrettyDisplay.put("Cl", "♣"); // CLUB
+        colorPrettyDisplay.put("T", "\u2663"); // TREFLE
+        colorPrettyDisplay.put("Cl", "\u2663"); // CLUB
     }
 
     public Suit(String suit) {
@@ -61,7 +61,7 @@ public class Suit {
     }
 
     public static List<Suit> getClassicalSuits() {
-        return new ArrayList<Suit>(Arrays.asList(new Suit("♠"), new Suit("♥"),
-                                                  new Suit("♦"), new Suit("♣")));
+        return new ArrayList<Suit>(Arrays.asList(new Suit("\u2660"), new Suit("\u2665"),
+                                                  new Suit("\u2666"), new Suit("\u2663")));
     }
 }
