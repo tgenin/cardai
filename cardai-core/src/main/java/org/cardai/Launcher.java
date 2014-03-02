@@ -28,6 +28,7 @@ import org.cardai.game.Game;
 import org.cardai.game.GameEngine;
 import org.cardai.game.GameLoader;
 import org.cardai.game.Player;
+import org.cardai.game.play.PlayingStrategy;
 
 public class Launcher {
 
@@ -40,6 +41,7 @@ public class Launcher {
 
         String[] strategies = new String[g.getNumOfPlayers()];
 
+
         for (int i = 0; i < strategies.length; i++) {
             strategies[i] = (args.length > i+2) ?  args[i+2] : "first-card";
         }
@@ -47,8 +49,8 @@ public class Launcher {
         List<Player> players = initializePlayers(g,strategies);
 
         GameEngine ge = new GameEngine(g,players);
-        ge.run(Integer.parseInt(numOfRun));
 
+        ge.run(Integer.parseInt(numOfRun), false);
     }
 
     /**
@@ -64,8 +66,7 @@ public class Launcher {
         List<Player> players = new ArrayList<Player>(g.getNumOfPlayers());
 
         for (int i = 0; i < strategies.length; i++) {
-            Player p = new Player();
-            p.setStrategy(g.getStrategy(strategies[i]));
+            Player p = new Player((PlayingStrategy) g.getStrategy(strategies[i]));
             players.add(p);
         }
         return players;

@@ -22,24 +22,29 @@ package org.cardai.game;
 import org.cardai.exception.UnexpectedSituationException;
 import org.cardai.game.card.Card;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.TimeUnit;
 
 public class GameEngine {
 
     private final Game         game;
-    private final List<Player> players;
-    private       GameHand     gamehand;
-
+    private final List<Player> playerStrategies;
 
     public GameEngine(Game game, final List<Player> players) {
-        this.game     = game;
-        this.players  = players;
+        this.game              = game;
+        this.playerStrategies  = players;
     }
 
     /**
      * Plays the whole hand, which means plays as long as a player can play a card
+     * @param players
      */
-    private void playHand() {
+    private void playHand(GameHand gamehand, List<Player> players) {
+        RandomSeed.reset(); //TODO Only used for random strategies try to remove it
+
         while (gamehand.getReferencePosition() != null) {
             final Player player    = players.get(gamehand.getReferencePosition());
             final List<Card> cards = gamehand.getPlayedCards();
@@ -49,30 +54,72 @@ public class GameEngine {
         }
     }
 
+    void runAllHands(int startRun, int stopRun) throws UnexpectedSituationException {
+        for (int i = startRun; i < stopRun; i++) {
+            for (int dealer = 0; dealer < game.getNumOfPlayers(); dealer++) {
+                runOneHand(dealer, i);
+            }
+        }
+    }
+
+    private void runAllHands(int numOfRun) throws UnexpectedSituationException {
+        runAllHands(0,numOfRun);
+    }
+
     /**
      * Deal the deck, set hands and run the game
+     * this method can be multithreaded
+     * @param fork boolean indicates if computation is multithreaded
      * @param gamehand
      * @throws UnexpectedSituationException
      */
-    public void run(int numOfHands) throws UnexpectedSituationException {
-        for (int i = 0; i < numOfHands; i++) {
-            RandomSeed.setSeed(i); //TODO improve this
-            for (int dealer = 0; dealer < game.getNumOfPlayers(); dealer++) {
-                prepareHand(dealer);
-                playHand();
-                game.register(gamehand);
+    public void run(int numOfRun, boolean fork) throws UnexpectedSituationException {
+        RandomSeed.setSeed(numOfRun); //TODO Only used for random strategies try to remove it
+
+        if (!fork) {
+            runAllHands(numOfRun);
+        }
+        else {
+            final int numCores = Runtime.getRuntime().availableProcessors();
+            System.out.println("Fork on <"+numCores+"> processors");
+
+            final ForkJoinPool pool = new ForkJoinPool(numCores);
+            final GameFork gf = new GameFork(this, numOfRun);
+            pool.invoke(gf);
+            pool.shutdown();
+            try {
+                pool.awaitTermination(60, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
         game.analyse();
     }
 
+    /**
+     * Run one seeded hand
+     * @param dealer
+     * @param seed
+     * @throws UnexpectedSituationException
+     */
+    public void runOneHand(int dealer, int seed) throws UnexpectedSituationException {
+        final GameHand gamehand = new GameHand(game.getNumOfPlayers(), dealer);
+        final List<Player> players = new ArrayList<Player>(this.playerStrategies.size());
 
-    private void prepareHand(int dealer) throws UnexpectedSituationException {
+        for (Player player : this.playerStrategies) {
+            players.add(player.clone());
+        }
+
+        prepareHand(gamehand, players, dealer, seed);
+        playHand(gamehand,players);
+        game.register(gamehand);
+    }
+
+    private void prepareHand(GameHand gamehand, List<Player> players, int dealer, int seed) throws UnexpectedSituationException {
         // TODO dealer and first player are not the same player in real card games
-        this.gamehand = new GameHand(game.getNumOfPlayers(), dealer);
 
-        // Random seed is reset here so that players can re-play the same game
-        List<List<Card>> deal = game.deal(new Deck(this.game, RandomSeed.reset()), dealer);
+        List<List<Card>> deal = game.deal(new Deck(this.game, seed), dealer);
+
         gamehand.setReferencePosition(dealer);
         gamehand.setHands(deal);
         for (int i = 0; i < players.size(); i++) {

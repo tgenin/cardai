@@ -79,7 +79,6 @@ public class SimpleGame extends Game {
             int winindex = computeWinnerIndex(trick);
             next = (winindex + gamehand.getTrickStarter()) % numPlayers;
             gamehand.setTrickStarter(next); // TODO Ughh manage this in gamehand not here !!!!
-//            System.out.println("w:"+next+ " ");
         } catch (InternalException e) {
             // trick not finished yet
             next = (gamehand.getReferencePosition() + 1) % numPlayers;
@@ -90,6 +89,7 @@ public class SimpleGame extends Game {
         }
         return next;
     }
+
 
     /**
      * Computes the winner cards from a list of cards
@@ -125,13 +125,15 @@ public class SimpleGame extends Game {
         return trick;
     }
 
+
     //TODO implement generic List<E>
     private boolean isTrickDone(List<Card> cards) {
         return (cards.size() % numPlayers) == 0;
     }
 
+
     @Override
-    public void register(GameHand gamehand) {
+    public synchronized void register(GameHand gamehand) {
         List<Card> playedCards = gamehand.getPlayedCards();
         int[] computeWinnerArray = computeWinnerArray(playedCards);
         for (int winIndex : computeWinnerArray) {

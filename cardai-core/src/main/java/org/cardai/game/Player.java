@@ -23,15 +23,19 @@ import java.util.List;
 
 import org.cardai.game.card.Card;
 import org.cardai.game.play.PlayingStrategy;
-import org.cardai.game.play.Strategy;
 
 public class Player {
-    private Hand hand;
 
+    private Hand hand;
     private PlayingStrategy playingStrategy;
 
-    public Hand getHand() {
-        return this.hand;
+    public Player(PlayingStrategy playingStrategy, Hand hand) {
+        this.hand            = hand;
+        this.playingStrategy = playingStrategy;
+    }
+
+    public Player(PlayingStrategy playingStrategy) {
+        this.playingStrategy = playingStrategy;
     }
 
     public void setHand(final Hand hand) {
@@ -45,7 +49,7 @@ public class Player {
         return card;
     }
 
-    public void setStrategy(final Strategy strategy) {
-        this.playingStrategy = (PlayingStrategy) strategy;
+    public Player clone() {
+        return new Player(this.playingStrategy);
     }
 }
