@@ -38,7 +38,7 @@ public abstract class Game {
 
     public Game() {
         setCardSuits();
-        setCardValues();
+        setCardValues(); // Set Values outside constructor so that the method can be overridable
         setStrategies();
         this.numPlayers = 4; // To be parameterizable
     }
@@ -54,14 +54,11 @@ public abstract class Game {
 
     public abstract void analyse();
 
-    /**
-     * Please @Override this method if your card game use other types of suits
-     */
-    public void setCardSuits() {
+    private void setCardSuits() {
         this.suits = Suit.getClassicalSuits();
     };
 
-    public void setCardValues() {
+    private void setCardValues() {
         this.values = Value.get32(true);
     }
 

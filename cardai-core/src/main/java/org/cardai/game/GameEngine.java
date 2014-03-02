@@ -26,23 +26,25 @@ import java.util.List;
 
 public class GameEngine {
 
-    private Game         game;
-    private GameHand     gamehand;
-    private List<Player> players;
+    private final Game         game;
+    private final List<Player> players;
+    private       GameHand     gamehand;
 
-    public GameEngine(Game game, List<Player> players) {
+
+    public GameEngine(Game game, final List<Player> players) {
         this.game     = game;
         this.players  = players;
-        this.gamehand = null; // At start, no game hand initialized
     }
 
     /**
      * Plays the whole hand, which means plays as long as a player can play a card
      */
     private void playHand() {
-        while (! (gamehand.getReferencePosition() == null)) {
-            Card c = players.get(gamehand.getReferencePosition()).play(gamehand.getPlayedCards());
-            gamehand.play(c);
+        while (gamehand.getReferencePosition() != null) {
+            final Player player    = players.get(gamehand.getReferencePosition());
+            final List<Card> cards = gamehand.getPlayedCards();
+            final Card card        = player.play(cards);
+            gamehand.play(card);
             gamehand.setReferencePosition(game.nextPlayer(gamehand));
         }
     }

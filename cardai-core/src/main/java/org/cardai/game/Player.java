@@ -25,32 +25,27 @@ import org.cardai.game.card.Card;
 import org.cardai.game.play.PlayingStrategy;
 import org.cardai.game.play.Strategy;
 
-
 public class Player {
     private Hand hand;
 
     private PlayingStrategy playingStrategy;
 
-    public Player (int position) {
-        this.playingStrategy = null;
-    }
-
     public Hand getHand() {
         return this.hand;
     }
 
-    public void setHand(Hand hand) {
+    public void setHand(final Hand hand) {
         this.hand = hand;
     }
 
-    public Card play(List<Card> playedCards) {
+    public Card play(final List<Card> playedCards) {
         // TODO allow player instance to access to playedCards
-        Card c = this.playingStrategy.play(hand, playedCards);
-        this.hand.removeCard(c);
-        return c;
+        final Card card = this.playingStrategy.play(hand, playedCards);
+        this.hand.removeCard(card);
+        return card;
     }
 
-    public void setStrategy(Strategy strategy) {
+    public void setStrategy(final Strategy strategy) {
         this.playingStrategy = (PlayingStrategy) strategy;
     }
 }

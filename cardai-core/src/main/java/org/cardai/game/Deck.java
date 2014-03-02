@@ -31,17 +31,17 @@ public class Deck extends ArrayList<Card>{
 
     private static final long serialVersionUID = -8548765332741698616L;
 
-    public Deck(Game g, Random r) {
-        super(g.suits().size() * 8);
-        for (Suit suit : g.suits()) {
-            for (Value value : g.values()) {
+    public Deck(Game game, Random rand) {
+        super(game.suits().size() * 8);
+        for (final Suit suit : game.suits()) {
+            for (final Value value : game.values()) {
                 this.add(new Card(value,suit));
             }
         }
-        shuffle(r);
+        shuffle(rand);
     }
 
-    private void shuffle(Random r) {
-        Collections.shuffle(this,r);
+    private void shuffle(Random rand) {
+        Collections.shuffle(this,rand);
     }
 }

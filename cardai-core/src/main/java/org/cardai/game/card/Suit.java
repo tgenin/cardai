@@ -30,26 +30,26 @@ public class Suit {
     public String suit;
     private String display;
 
-    public static final Map<String, String> colorPrettyDisplay;
+    public static final Map<String, String> PRETTY_DISPLAY;
     static {
-        colorPrettyDisplay = new HashMap<String, String>();
-        colorPrettyDisplay.put("P", "\u2660"); // PIQUE
-        colorPrettyDisplay.put("S", "\u2660"); // SPADE
+        PRETTY_DISPLAY = new HashMap<String, String>();
+        PRETTY_DISPLAY.put("P", "\u2660"); // PIQUE
+        PRETTY_DISPLAY.put("S", "\u2660"); // SPADE
 
-        colorPrettyDisplay.put("C", "\u2665"); // COEUR
-        colorPrettyDisplay.put("H", "\u2665"); // HEART
+        PRETTY_DISPLAY.put("C", "\u2665"); // COEUR
+        PRETTY_DISPLAY.put("H", "\u2665"); // HEART
 
-        colorPrettyDisplay.put("K", "\u2666"); // CARREAU
-        colorPrettyDisplay.put("D", "\u2666"); // DIAMOND
+        PRETTY_DISPLAY.put("K", "\u2666"); // CARREAU
+        PRETTY_DISPLAY.put("D", "\u2666"); // DIAMOND
 
-        colorPrettyDisplay.put("T", "\u2663"); // TREFLE
-        colorPrettyDisplay.put("Cl", "\u2663"); // CLUB
+        PRETTY_DISPLAY.put("T", "\u2663"); // TREFLE
+        PRETTY_DISPLAY.put("Cl", "\u2663"); // CLUB
     }
 
     public Suit(String suit) {
         this.suit = suit;
-        this.display = (colorPrettyDisplay.containsKey(suit)) ? colorPrettyDisplay.get(suit)
-                                                              : suit;
+        this.display = (PRETTY_DISPLAY.containsKey(suit)) ? PRETTY_DISPLAY.get(suit)
+                                                          : suit;
     }
 
     public String toString() {

@@ -29,60 +29,64 @@ import org.cardai.exception.UnexpectedSituationException;
 
 public class Value {
 
-    public int suit_order;
-    public int trump_order;
-    public int suit_point;
-    public int trump_point;
-    public String value;
+    public final int suitOrder;
+    public final int trumpOrder;
+    public final int suitPoint;
+    public final int trumpPoint;
+    public final String value;
 
-    private static final Map<String, Integer> refOrder;
+    private static final Map<String, Integer> REF_ORDER;
     static {
-        refOrder = new HashMap<String, Integer>();
-        refOrder.put("1", 1);
-        refOrder.put("2", 2);  refOrder.put("3", 3);  refOrder.put("4", 4);
-        refOrder.put("5", 5);  refOrder.put("6", 6);  refOrder.put("7", 7);
-        refOrder.put("8", 8);  refOrder.put("9", 9);  refOrder.put("X", 10);
-        refOrder.put("J", 11); refOrder.put("C", 12); refOrder.put("Q", 13);
-        refOrder.put("K", 15); refOrder.put("A", 15);
+        REF_ORDER = new HashMap<String, Integer>();
+        REF_ORDER.put("1", 1);
+        REF_ORDER.put("2", 2);  REF_ORDER.put("3", 3);  REF_ORDER.put("4", 4);
+        REF_ORDER.put("5", 5);  REF_ORDER.put("6", 6);  REF_ORDER.put("7", 7);
+        REF_ORDER.put("8", 8);  REF_ORDER.put("9", 9);  REF_ORDER.put("X", 10);
+        REF_ORDER.put("J", 11); REF_ORDER.put("C", 12); REF_ORDER.put("Q", 13);
+        REF_ORDER.put("K", 15); REF_ORDER.put("A", 15);
     }
 
     // TOODO Generalized, not all card games have a trump system
-    public Value(int suit_order, int trump_order, int suit_point, int trump_point, String value) {
-        this.suit_order  = suit_order;
-        this.trump_order = trump_order;
-        this.suit_point  = suit_point;
-        this.trump_point = trump_point;
+    public Value(final int suitOrder, final int trumpOrder, final int suitPoint,
+                 final int trumpPoint,final String value) {
+        this.suitOrder  = suitOrder;
+        this.trumpOrder = trumpOrder;
+        this.suitPoint  = suitPoint;
+        this.trumpPoint = trumpPoint;
         this.value       = value;
     }
 
-    public Value(String value) throws UnexpectedSituationException {
-        if (refOrder.get(value) == null)
-            throw new UnexpectedSituationException("Unknown value <" + value + ">");
+    public Value(final String value) throws UnexpectedSituationException {
 
-        this.suit_order  = refOrder.get(value);
-        this.trump_order = refOrder.get(value);
-        this.suit_point  = refOrder.get(value);
-        this.trump_point = refOrder.get(value);
-        this.value       = value;
+        if (REF_ORDER.get(value) == null) {
+            throw new UnexpectedSituationException("Unknown value <" + value + ">");
+        }
+
+        this.suitOrder  = REF_ORDER.get(value);
+        this.trumpOrder = REF_ORDER.get(value);
+        this.suitPoint  = REF_ORDER.get(value);
+        this.trumpPoint = REF_ORDER.get(value);
+        this.value      = value;
     }
 
     public String toString() {
         return value;
     }
 
-    public boolean equals(Value v) {
-        return this.value.equals(v.value);
+    public boolean equals(final Value otherValue) {
+        return this.value.equals(otherValue.value);
     }
 
-    public static List<Value> get32(boolean isAceBest) {
-        List<Value> list = new ArrayList<Value>(Arrays.asList(
-                                   new Value (1,1,0,0, "7"),
-                                   new Value (2,2,0,0, "8"),
-                                   new Value (3,3,0,0, "9"),
-                                   new Value (4,4,0,0, "X"),
-                                   new Value (5,5,0,0, "V"),
-                                   new Value (6,6,0,0, "D"),
-                                   new Value (7,7,0,0, "K")));
+    public static List<Value> get32(final boolean isAceBest) {
+        final List<Value> list = new ArrayList<Value>(Arrays.asList(
+                                         new Value (1,1,0,0, "7"),
+                                         new Value (2,2,0,0, "8"),
+                                         new Value (3,3,0,0, "9"),
+                                         new Value (4,4,0,0, "X"),
+                                         new Value (5,5,0,0, "V"),
+                                         new Value (6,6,0,0, "D"),
+                                         new Value (7,7,0,0, "K"))
+                                     );
         if (isAceBest) {
             list.add(new Value (8,8,0,0, "A"));
         }
@@ -91,5 +95,21 @@ public class Value {
         }
 
         return list;
+    }
+
+    public int getSuitOrder() {
+        return suitOrder;
+    }
+
+    public int getTrumpOrder() {
+        return trumpOrder;
+    }
+
+    public int getSuitPoint() {
+        return suitPoint;
+    }
+
+    public int getTrumpPoint() {
+        return trumpPoint;
     }
 }

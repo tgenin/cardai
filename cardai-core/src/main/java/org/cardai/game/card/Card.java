@@ -61,11 +61,11 @@ public class Card {
      */
     public int getOrder(boolean isTrump) {
         // TODO make this method private and expose getOrder(Suit trump)
-        return isTrump ? this.value.trump_order : this.value.suit_order;
+        return isTrump ? this.value.getTrumpOrder() : this.value.getSuitOrder();
     }
 
     public int getPoint(boolean isTrump) {
-        return isTrump ? this.value.trump_point : this.value.suit_point;
+        return isTrump ? this.value.getTrumpPoint() : this.value.getSuitPoint();
     }
 
     /**

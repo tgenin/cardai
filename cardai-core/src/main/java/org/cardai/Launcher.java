@@ -64,7 +64,7 @@ public class Launcher {
         List<Player> players = new ArrayList<Player>(g.getNumOfPlayers());
 
         for (int i = 0; i < strategies.length; i++) {
-            Player p = new Player(i);
+            Player p = new Player();
             p.setStrategy(g.getStrategy(strategies[i]));
             players.add(p);
         }
