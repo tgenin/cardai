@@ -79,9 +79,9 @@ public abstract class Game {
      * @param startPlayer
      * @return
      */
-    public List<List<Card>> deal(List<Card> cards, int startPlayer) {
+    public List<List<Card>> deal(Deck deck, int startPlayer) {
         List<List<Card>> deal = new ArrayList<List<Card>>(numPlayers + 1); // + 1 for remaining cards
-        int counter = cards.size();
+        int counter = deck.size();
 
         for (int i = 0; i < numPlayers + 1; i++) {
             deal.add(new ArrayList<Card>(counter / numPlayers));
@@ -89,13 +89,13 @@ public abstract class Game {
         // Deal the cards to players
         while (this.numPlayers <= counter) {
             for (int i = 0; i < numPlayers; i++) {
-                deal.get((startPlayer + i) % numPlayers).add(cards.get(counter-1));
+                deal.get((startPlayer + i) % numPlayers).add(deck.get(counter-1));
                 counter--;
             }
         }
         // Put the remaining cards on the last pack
         while (counter > 0) {
-            deal.get(numPlayers).add(cards.get(counter-1));
+            deal.get(numPlayers).add(deck.get(counter-1));
             counter--;
         }
         return deal;

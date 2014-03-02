@@ -25,28 +25,23 @@ import org.cardai.game.card.Value;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.Random;
 
-public class Deck {
+public class Deck extends ArrayList<Card>{
 
-    private List<Card> cards;
+    private static final long serialVersionUID = -8548765332741698616L;
 
-    public Deck(Game g) {
-        cards = new ArrayList<Card>(g.suits().size() * 8);
+    public Deck(Game g, Random r) {
+        super(g.suits().size() * 8);
         for (Suit suit : g.suits()) {
             for (Value value : g.values()) {
-                cards.add(new Card(value,suit));
+                this.add(new Card(value,suit));
             }
         }
-        shuffle();
+        shuffle(r);
     }
 
-    public List<Card> shuffle() {
-        Collections.shuffle(cards,RandomSeed.getGenerator());
-        return cards;
-    }
-
-    public List<Card> getCards() {
-        return cards;
+    private void shuffle(Random r) {
+        Collections.shuffle(this,r);
     }
 }

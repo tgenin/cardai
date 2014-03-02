@@ -24,28 +24,22 @@ import java.util.Random;
 public class RandomSeed {
 
     private static Random r = new Random(0);
-    private static int numAccess = 0;
     private static int seed = 0;
 
+    //TODO Remove this class and manage random locally
+
     public static int nextInt(int n) {
-        numAccess++;
         return r.nextInt(n);
     }
 
     public static void setSeed(int seed) {
         RandomSeed.seed = seed;
         r.setSeed(seed);
-        numAccess = 0;
     }
 
-    public static void reset() {
+    protected static Random reset() {
         r.setSeed(RandomSeed.seed);
-        numAccess = 0;
-    }
-
-
-    public int getNumAccess() {
-        return numAccess;
+        return r;
     }
 
     public static Random getGenerator() {

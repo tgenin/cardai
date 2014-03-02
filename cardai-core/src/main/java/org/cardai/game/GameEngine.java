@@ -29,14 +29,11 @@ public class GameEngine {
     private Game         game;
     private GameHand     gamehand;
     private List<Player> players;
-    private Deck         deck;
-
 
     public GameEngine(Game game, List<Player> players) {
         this.game     = game;
         this.players  = players;
         this.gamehand = null; // At start, no game hand initialized
-        this.deck     = new Deck(game);
     }
 
     /**
@@ -58,22 +55,22 @@ public class GameEngine {
     public void run(int numOfHands) throws UnexpectedSituationException {
         for (int i = 0; i < numOfHands; i++) {
             RandomSeed.setSeed(i); //TODO improve this
-            for (int j = 0; j < game.getNumOfPlayers(); j++) {
-                prepareHand(j);
+            for (int dealer = 0; dealer < game.getNumOfPlayers(); dealer++) {
+                prepareHand(dealer);
                 playHand();
                 game.register(gamehand);
             }
-            deck.shuffle();
         }
         game.analyse();
     }
 
 
     private void prepareHand(int dealer) throws UnexpectedSituationException {
-        RandomSeed.reset();
-        this.gamehand = new GameHand(game.getNumOfPlayers(), dealer);
         // TODO dealer and first player are not the same player in real card games
-        List<List<Card>> deal = game.deal(deck.getCards(), dealer);
+        this.gamehand = new GameHand(game.getNumOfPlayers(), dealer);
+
+        // Random seed is reset here so that players can re-play the same game
+        List<List<Card>> deal = game.deal(new Deck(this.game, RandomSeed.reset()), dealer);
         gamehand.setReferencePosition(dealer);
         gamehand.setHands(deal);
         for (int i = 0; i < players.size(); i++) {
