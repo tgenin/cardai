@@ -71,7 +71,7 @@ public class CardTest {
 
     @Test
     public void testToStringValue() {
-        assertEquals(card.toString(),"7♠");
+        assertEquals(card.toString(),"7\u2660");
     }
 
     @Test
@@ -94,7 +94,7 @@ public class CardTest {
 
     @Test
     public void testToString() {
-        assertEquals(card.toString(),"7♠");
+        assertEquals(card.toString(),"7\u2660");
     }
 
 }
